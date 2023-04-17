@@ -25,12 +25,31 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(
+  helmet.crossOriginResourcePolicy({
+    policy: "cross-origin",
+  })
+);
 app.use(morgan("common"));
-app.use(bodyParser.json({ limit: "30mb", extended: true }));
-app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+app.use(
+  bodyParser.json({
+    limit: "30mb",
+    extended: true,
+  })
+);
+app.use(
+  bodyParser.urlencoded({
+    limit: "30mb",
+    extended: true,
+  })
+);
 app.use(cors());
-app.use("/assets", express.static(path.join(__dirname, "public/assets")));
+app.use(
+  "/assets",
+  express.static(
+    path.join(__dirname, "public/assets")
+  )
+);
 
 /* FILE STORAGE */
 const storage = multer.diskStorage({
@@ -44,8 +63,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 /* ROUTES WITH FILES */
-app.post("/auth/register", upload.single("picture"), register);
-app.post("/posts", verifyToken, upload.single("picture"), createPost);
+app.post(
+  "/auth/register",
+  upload.single("picture"),
+  register
+);
+app.post(
+  "/posts",
+  verifyToken,
+  upload.single("picture"),
+  createPost
+);
 
 /* ROUTES */
 app.use("/auth", authRoutes);
@@ -60,10 +88,14 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    app.listen(PORT, () => console.log(`Server Port: ${PORT}`));
+    app.listen(PORT, () =>
+      console.log(`Server Port: ${PORT}`)
+    );
 
     /* ADD DATA ONE TIME */
     // User.insertMany(users);
     // Post.insertMany(posts);
   })
-  .catch((error) => console.log(`${error} did not connect`));
+  .catch((error) =>
+    console.log(`${error} - did not connect`)
+  );
